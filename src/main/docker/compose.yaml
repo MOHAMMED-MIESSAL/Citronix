@@ -1,0 +1,14 @@
+name: citronix
+services:
+  postgres:
+    container_name: citronix
+    image: 'postgres:latest'
+    environment:
+      - 'POSTGRES_DB=citronix'
+      - 'POSTGRES_PASSWORD=citronix'
+      - 'POSTGRES_USER=citronix'
+    ports:
+      - '5433:5432'
+volumes:
+  postgres_data:
+    driver: local
