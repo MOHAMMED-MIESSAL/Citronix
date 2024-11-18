@@ -15,16 +15,15 @@ import java.time.Period;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Arbre {
+public class Tree {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private LocalDate datePlantation;
 
     @ManyToOne
-    @JoinColumn(name = "champ_id")
-    private Champ champ;
+    private Field farm;
 
     public int getAge() {
         return Period.between(this.datePlantation, LocalDate.now()).getYears();

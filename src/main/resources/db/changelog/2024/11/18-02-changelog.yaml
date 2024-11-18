@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1731930308088-1
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropColumn:
+            columnName: creation_date
+            tableName: farm
+  - changeSet:
+      id: 1731930308088-2
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  name: creation_date
+                  type: DATETIME
+            tableName: farm
+
