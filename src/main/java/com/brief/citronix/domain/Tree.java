@@ -23,7 +23,7 @@ public class Tree {
     private LocalDate datePlantation;
 
     @ManyToOne
-    private Field farm;
+    private Field field;
 
     public int getAge() {
         return Period.between(this.datePlantation, LocalDate.now()).getYears();

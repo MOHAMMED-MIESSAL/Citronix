@@ -25,6 +25,6 @@ public class Field {
     @ManyToOne
     private Farm farm;
 
-    @OneToMany(mappedBy = "farm")
+    @OneToMany(mappedBy = "field")
     private List<Tree> trees;
 }
