@@ -1,13 +1,11 @@
 package com.brief.citronix.service;
 
-import com.brief.citronix.domain.Farm;
 import com.brief.citronix.dto.FarmDto;
 import com.brief.citronix.viewmodel.FarmVM;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
