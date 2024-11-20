@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
+import java.util.UUID;
 
 
 @Entity
@@ -18,15 +20,17 @@ import java.time.Period;
 public class Tree {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private UUID id;
 
-    private LocalDate datePlantation;
+    private LocalDateTime datePlantation;
 
     @ManyToOne
     private Field field;
 
     public int getAge() {
-        return Period.between(this.datePlantation, LocalDate.now()).getYears();
+        LocalDate now = LocalDate.now();
+        LocalDate datePlantation = this.datePlantation.toLocalDate();
+        return Period.between(datePlantation, now).getYears();
     }
 
     public double getProductiviteAnnuelle() {

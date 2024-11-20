@@ -22,6 +22,8 @@ public interface FieldMapper {
     FieldDTO toFieldDTO(Field field);
 
     FieldVM toFieldVM(FieldDTO fieldDTO);
+
+
 }
 
 

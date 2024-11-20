@@ -7,6 +7,7 @@ import com.brief.citronix.dto.FarmDTO;
 import com.brief.citronix.mapper.FarmMapper;
 import com.brief.citronix.repository.FarmRepository;
 import com.brief.citronix.repository.FieldRepository;
+import com.brief.citronix.repository.TreeRepository;
 import com.brief.citronix.service.FarmService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
@@ -33,14 +34,16 @@ public class FarmServiceImpl implements FarmService {
 
     private final FarmRepository farmRepository;
     private final FieldRepository fieldRepository;
+    private final TreeRepository treeRepository;
     private final FarmMapper farmMapper;
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    public FarmServiceImpl(FarmRepository farmRepository, FieldRepository fieldRepository , FarmMapper farmMapper) {
+    public FarmServiceImpl(FarmRepository farmRepository, FieldRepository fieldRepository , TreeRepository treeRepository , FarmMapper farmMapper) {
         this.farmRepository = farmRepository;
         this.fieldRepository = fieldRepository;
+        this.treeRepository = treeRepository;
         this.farmMapper = farmMapper;
     }
 
@@ -84,15 +87,16 @@ public class FarmServiceImpl implements FarmService {
             throw new EntityNotFoundException("Farm with ID " + id + " not found");
         }
 
-        // Delete all fields associated with the farm
         List<Field> fields = fieldRepository.findByFarmId(id);
+
         if (!fields.isEmpty()) {
+            fields.forEach(field -> treeRepository.deleteByFieldId(field.getId()));
             fieldRepository.deleteAll(fields);
         }
 
-        // Delete the farm
         farmRepository.deleteById(id);
     }
+
 
     @Override
     public Page<FarmDTO> searchFarms(String name, String location, Double minArea, Double maxArea, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable) {
