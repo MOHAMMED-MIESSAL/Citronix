@@ -2,18 +2,22 @@ package com.brief.citronix.service.Impl;
 
 import com.brief.citronix.domain.Farm;
 import com.brief.citronix.domain.Field;
+import com.brief.citronix.domain.Tree;
 import com.brief.citronix.dto.FieldCreateDTO;
 import com.brief.citronix.dto.FieldDTO;
+import com.brief.citronix.dto.TreeDTO;
 import com.brief.citronix.exception.CustomValidationException;
 import com.brief.citronix.mapper.FieldMapper;
 import com.brief.citronix.repository.FarmRepository;
 import com.brief.citronix.repository.FieldRepository;
+import com.brief.citronix.repository.TreeRepository;
 import com.brief.citronix.service.FieldService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -22,11 +26,13 @@ public class FieldServiceImpl implements FieldService {
     private final FieldRepository fieldRepository;
     private final FarmRepository farmRepository;
     private final FieldMapper fieldMapper;
+    private final TreeRepository treeRepository;
 
-    public FieldServiceImpl(FieldRepository fieldRepository, FarmRepository farmRepository, FieldMapper fieldMapper) {
+    public FieldServiceImpl(FieldRepository fieldRepository, FarmRepository farmRepository, FieldMapper fieldMapper, TreeRepository treeRepository) {
         this.fieldRepository = fieldRepository;
         this.farmRepository = farmRepository;
         this.fieldMapper = fieldMapper;
+        this.treeRepository = treeRepository;
     }
 
     @Override
@@ -121,6 +127,11 @@ public class FieldServiceImpl implements FieldService {
         Optional<Field> field = fieldRepository.findById(id);
         if (field.isEmpty()) {
             throw new EntityNotFoundException("Field with ID " + id + " not found");
+        }
+        // Delete all trees associated with the field
+        List<Tree> trees = treeRepository.findTreesByFieldId(id);
+        if (!trees.isEmpty()) {
+            treeRepository.deleteAll(trees);
         }
         fieldRepository.deleteById(id);
     }
