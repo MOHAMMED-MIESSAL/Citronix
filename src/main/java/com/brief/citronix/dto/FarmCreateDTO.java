@@ -23,6 +23,7 @@ public class FarmCreateDTO {
     private String location;
 
     @Positive(message = "Area must be greater than 0")
+    @Min(value = 1, message = "Area must be at least 1 hectare (10,000 m²)")
     private double area;
 
     @PastOrPresent(message = "Creation date cannot be in the future")
