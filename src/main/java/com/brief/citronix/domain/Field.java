@@ -20,7 +20,7 @@ public class Field {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    private double area;
+    private double area; // in hectares
 
     @ManyToOne
     private Farm farm;
