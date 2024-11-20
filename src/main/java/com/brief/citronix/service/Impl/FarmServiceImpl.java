@@ -1,10 +1,12 @@
 package com.brief.citronix.service.Impl;
 
 import com.brief.citronix.domain.Farm;
+import com.brief.citronix.domain.Field;
 import com.brief.citronix.dto.FarmCreateDTO;
 import com.brief.citronix.dto.FarmDTO;
 import com.brief.citronix.mapper.FarmMapper;
 import com.brief.citronix.repository.FarmRepository;
+import com.brief.citronix.repository.FieldRepository;
 import com.brief.citronix.service.FarmService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
@@ -14,6 +16,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -29,13 +32,15 @@ import java.util.stream.Collectors;
 public class FarmServiceImpl implements FarmService {
 
     private final FarmRepository farmRepository;
+    private final FieldRepository fieldRepository;
     private final FarmMapper farmMapper;
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    public FarmServiceImpl(FarmRepository farmRepository, FarmMapper farmMapper) {
+    public FarmServiceImpl(FarmRepository farmRepository, FieldRepository fieldRepository , FarmMapper farmMapper) {
         this.farmRepository = farmRepository;
+        this.fieldRepository = fieldRepository;
         this.farmMapper = farmMapper;
     }
 
@@ -72,11 +77,20 @@ public class FarmServiceImpl implements FarmService {
     }
 
     @Override
+    @Transactional
     public void delete(UUID id) {
         Optional<Farm> farmOptional = farmRepository.findById(id);
         if (farmOptional.isEmpty()) {
             throw new EntityNotFoundException("Farm with ID " + id + " not found");
         }
+
+        // Delete all fields associated with the farm
+        List<Field> fields = fieldRepository.findByFarmId(id);
+        if (!fields.isEmpty()) {
+            fieldRepository.deleteAll(fields);
+        }
+
+        // Delete the farm
         farmRepository.deleteById(id);
     }
 

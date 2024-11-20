@@ -52,4 +52,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleGenericException(Exception ex) {
         return new ResponseEntity<>("Une erreur interne est survenue : " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    /**
+     * Handler pour l'exception CustomValidationException.
+     */
+    @ExceptionHandler(CustomValidationException.class)
+    public ResponseEntity<String> handleCustomValidationException(CustomValidationException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }
