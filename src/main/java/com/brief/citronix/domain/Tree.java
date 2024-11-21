@@ -34,7 +34,10 @@ public class Tree {
 
     public double getAnnualProductivity() {
         int age = getAge();
-        if (age < 3) {
+
+        if (age > 20) {
+            return 0;
+        } else if (age < 3) {
             return 2.5;
         } else if (age <= 10) {
             return 12;
