@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.UUID;
@@ -28,12 +27,12 @@ public class Tree {
     private Field field;
 
     public int getAge() {
-        LocalDate now = LocalDate.now();
-        LocalDate datePlantation = this.datePlantation.toLocalDate();
-        return Period.between(datePlantation, now).getYears();
+        LocalDateTime now = LocalDateTime.now();
+        Period period = Period.between(datePlantation.toLocalDate(), now.toLocalDate());
+        return period.getYears();
     }
 
-    public double getProductiviteAnnuelle() {
+    public double getAnnualProductivity() {
         int age = getAge();
         if (age < 3) {
             return 2.5;

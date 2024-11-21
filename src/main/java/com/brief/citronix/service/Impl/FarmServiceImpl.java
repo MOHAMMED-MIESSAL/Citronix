@@ -2,12 +2,10 @@ package com.brief.citronix.service.Impl;
 
 import com.brief.citronix.domain.Farm;
 import com.brief.citronix.domain.Field;
+import com.brief.citronix.domain.Tree;
 import com.brief.citronix.dto.FarmCreateDTO;
-import com.brief.citronix.dto.FarmDTO;
 import com.brief.citronix.mapper.FarmMapper;
 import com.brief.citronix.repository.FarmRepository;
-import com.brief.citronix.repository.FieldRepository;
-import com.brief.citronix.repository.TreeRepository;
 import com.brief.citronix.service.FarmService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
@@ -27,56 +25,56 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class FarmServiceImpl implements FarmService {
 
     private final FarmRepository farmRepository;
-    private final FieldRepository fieldRepository;
-    private final TreeRepository treeRepository;
+  private final FieldServiceImpl fieldServiceImpl;
+  private final TreeServiceImpl treeServiceImpl;
     private final FarmMapper farmMapper;
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    public FarmServiceImpl(FarmRepository farmRepository, FieldRepository fieldRepository , TreeRepository treeRepository , FarmMapper farmMapper) {
+    public FarmServiceImpl(FarmRepository farmRepository, FieldServiceImpl fieldServiceImpl, TreeServiceImpl treeServiceImpl, FarmMapper farmMapper) {
         this.farmRepository = farmRepository;
-        this.fieldRepository = fieldRepository;
-        this.treeRepository = treeRepository;
+        this.fieldServiceImpl = fieldServiceImpl;
+        this.treeServiceImpl = treeServiceImpl;
         this.farmMapper = farmMapper;
     }
 
     @Override
-    public Page<FarmDTO> findAll(Pageable pageable) {
-        Page<Farm> farms = farmRepository.findAll(pageable);
-        return farms.map(farmMapper::toFarmDTO);
+    public Page<Farm> findAll(Pageable pageable) {
+        return farmRepository.findAll(pageable);
     }
 
     @Override
-    public FarmDTO save(FarmCreateDTO farmCreateDTO) {
-        return farmMapper.toFarmDTO(farmRepository.save(farmMapper.toFarm(farmCreateDTO)));
+    public Farm save(FarmCreateDTO farmCreateDTO) {
+        Farm farm = farmMapper.toFarm(farmCreateDTO);
+        return farmRepository.save(farm);
     }
 
     @Override
-    public FarmDTO update(UUID id, FarmCreateDTO farmCreateDTO) {
-        Farm farm = farmRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Farm with ID " + id + " not found")
-        );
+    public Farm update(UUID id, FarmCreateDTO farmCreateDTO) {
+        Farm farm = farmRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Farm with ID " + id + " not found"));
+
+        farm.setId(id);
         farm.setName(farmCreateDTO.getName());
         farm.setLocation(farmCreateDTO.getLocation());
         farm.setArea(farmCreateDTO.getArea());
         farm.setCreationDate(farmCreateDTO.getCreationDate());
-        return farmMapper.toFarmDTO(farmRepository.save(farm));
+        return farmRepository.save(farm);
     }
 
     @Override
-    public Optional<FarmDTO> findFarmById(UUID id) {
+    public Optional<Farm> findFarmById(UUID id) {
         Optional<Farm> farmOptional = farmRepository.findById(id);
         if (farmOptional.isEmpty()) {
             throw new EntityNotFoundException("Farm with ID " + id + " not found");
         }
-        return farmOptional.map(farmMapper::toFarmDTO);
+        return farmOptional;
     }
 
     @Override
@@ -87,11 +85,16 @@ public class FarmServiceImpl implements FarmService {
             throw new EntityNotFoundException("Farm with ID " + id + " not found");
         }
 
-        List<Field> fields = fieldRepository.findByFarmId(id);
+        List<Field> fields = fieldServiceImpl.findByFarmId(id);
 
         if (!fields.isEmpty()) {
-            fields.forEach(field -> treeRepository.deleteByFieldId(field.getId()));
-            fieldRepository.deleteAll(fields);
+            fields.forEach(field -> {
+                List<Tree> trees = treeServiceImpl.findTreesByFieldId(field.getId());
+                if (!trees.isEmpty()) {
+                    trees.forEach(tree -> treeServiceImpl.delete(tree.getId()));
+                }
+                fieldServiceImpl.delete(field.getId());
+            });
         }
 
         farmRepository.deleteById(id);
@@ -99,7 +102,7 @@ public class FarmServiceImpl implements FarmService {
 
 
     @Override
-    public Page<FarmDTO> searchFarms(String name, String location, Double minArea, Double maxArea, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable) {
+    public Page<Farm> searchFarms(String name, String location, Double minArea, Double maxArea, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Farm> criteriaQuery = criteriaBuilder.createQuery(Farm.class);
         Root<Farm> farmRoot = criteriaQuery.from(Farm.class);
@@ -148,12 +151,8 @@ public class FarmServiceImpl implements FarmService {
 
         List<Farm> farms = query.getResultList();
 
-        // Convertir les résultats en DTO et retourner un Page
-        List<FarmDTO> farmDTOs = farms.stream()
-                .map(farmMapper::toFarmDTO)
-                .collect(Collectors.toList());
+        return new PageImpl<>(farms, pageable, farms.size());
 
-        // Retourner la page de FarmDTOs
-        return new PageImpl<>(farmDTOs, pageable, farms.size());
+
     }
 }

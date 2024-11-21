@@ -1,7 +1,7 @@
 package com.brief.citronix.web.rest;
 
+import com.brief.citronix.domain.Tree;
 import com.brief.citronix.dto.TreeCreateDTO;
-import com.brief.citronix.dto.TreeDTO;
 import com.brief.citronix.mapper.TreeMapper;
 import com.brief.citronix.service.TreeService;
 import com.brief.citronix.viewmodel.TreeVM;
@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -32,23 +31,23 @@ public class TreeController {
     public ResponseEntity<Page<TreeVM>> getAllTrees(@RequestParam(defaultValue = "0") int page,
                                                     @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<TreeDTO> treeDTOPage = treeService.findAll(pageable);
-        Page<TreeVM> treeVMPage = treeDTOPage.map(treeMapper::toTreeVM);
-        return ResponseEntity.ok(treeVMPage);
+        return ResponseEntity.ok(treeService.findAll(pageable)
+                .map(treeMapper::toTreeVM));
     }
 
     @PostMapping
     public ResponseEntity<TreeVM> createTree(@Valid @RequestBody TreeCreateDTO treeCreateDTO) {
-        TreeDTO treeDTO = treeService.save(treeCreateDTO);
-        TreeVM treeVM = treeMapper.toTreeVM(treeDTO);
+        Tree tree = treeService.save(treeCreateDTO);
+        TreeVM treeVM = treeMapper.toTreeVM(tree);
         return ResponseEntity.status(HttpStatus.CREATED).body(treeVM);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<TreeVM> updateTree(@PathVariable UUID id, @Valid @RequestBody TreeCreateDTO treeCreateDTO) {
-        TreeDTO treeDTO = treeService.update(id, treeCreateDTO);
-        TreeVM treeVM = treeMapper.toTreeVM(treeDTO);
+        Tree tree = treeService.update(id, treeCreateDTO);
+        TreeVM treeVM = treeMapper.toTreeVM(tree);
         return ResponseEntity.ok(treeVM);
+
     }
 
     @DeleteMapping("/{id}")
@@ -59,8 +58,9 @@ public class TreeController {
 
     @GetMapping("/{id}")
     public ResponseEntity<TreeVM> getTree(@PathVariable UUID id) {
-        Optional<TreeDTO> treeDTO = treeService.findTreeById(id);
-        return treeDTO.map(tree -> ResponseEntity.ok(treeMapper.toTreeVM(tree)))
+        return treeService.findTreeById(id)
+                .map(tree -> ResponseEntity.ok(treeMapper.toTreeVM(tree)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
+
     }
 }

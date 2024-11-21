@@ -1,6 +1,7 @@
 package com.brief.citronix.dto;
 
 
+import com.brief.citronix.domain.Field;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import lombok.AllArgsConstructor;
@@ -20,6 +21,8 @@ import java.util.UUID;
 @AllArgsConstructor
 public class TreeCreateDTO {
 
+    private UUID id;
+
     //    @JsonProperty("date_plantation")
     @NotNull(message = "Date of plantation cannot be null")
     @PastOrPresent(message = "Date of plantation must be in the past or present")
@@ -28,4 +31,6 @@ public class TreeCreateDTO {
     //     @JsonProperty("field_id")
     @NotNull(message = "Field ID cannot be null")
     private UUID fieldId;
+
+    private FieldCreateDTO field;
 }
