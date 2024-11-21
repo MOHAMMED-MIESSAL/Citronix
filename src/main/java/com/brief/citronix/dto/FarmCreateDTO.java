@@ -1,9 +1,12 @@
 package com.brief.citronix.dto;
 
+import com.brief.citronix.domain.Field;
 import lombok.*;
 import jakarta.validation.constraints.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * DTO for creating a new Farm.
@@ -13,6 +16,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FarmCreateDTO {
+
+    private UUID id;
 
     @NotBlank(message = "Name cannot be blank")
     @NotNull(message = "Name cannot be null")
@@ -28,5 +33,7 @@ public class FarmCreateDTO {
 
     @PastOrPresent(message = "Creation date cannot be in the future")
     private LocalDateTime creationDate;
+
+    private List<FieldCreateDTO> fields;
 
 }
