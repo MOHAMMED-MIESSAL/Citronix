@@ -40,6 +40,14 @@ public class TreeServiceImpl implements TreeService {
         Field field = fieldServiceImpl.findFieldById(fieldId)
                 .orElseThrow(() -> new EntityNotFoundException("Field with ID " + fieldId + " not found"));
 
+        // Check if the field can have more trees
+        if (!canAddTreeToField(field)) {
+            throw new IllegalStateException(
+                    "Cannot add more trees to this field. Maximum density of 10 trees per 1,000 m² exceeded (0.1 hectare) " +
+                            "Field area: " + field.getArea() + " hectares."
+            );
+        }
+
         Tree tree = treeMapper.toTree(treeCreateDTO);
         tree.setField(field);
         return treeRepository.save(tree);
@@ -81,4 +89,13 @@ public class TreeServiceImpl implements TreeService {
     public List<Tree> findTreesByFieldId(UUID fieldId) {
         return treeRepository.findTreesByFieldId(fieldId);
     }
+
+    // Helper methods
+    public boolean canAddTreeToField(Field field) {
+        double areaInSquareMeters = field.getArea() * 10_000;
+        double maxTrees = areaInSquareMeters / 1_000 * 10;
+        long currentTreeCount = treeRepository.countByField(field);
+        return currentTreeCount < maxTrees;
+    }
+
 }
