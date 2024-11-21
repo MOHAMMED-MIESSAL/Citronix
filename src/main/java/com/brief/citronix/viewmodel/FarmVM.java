@@ -16,10 +16,11 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FarmVM {
-//    private UUID id;
+
     private String name;
     private String location;
     private double area;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime creationDate;
+
 }

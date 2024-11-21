@@ -4,8 +4,6 @@ import com.brief.citronix.domain.Farm;
 import com.brief.citronix.domain.Field;
 import com.brief.citronix.domain.Tree;
 import com.brief.citronix.dto.FieldCreateDTO;
-import com.brief.citronix.dto.FieldDTO;
-import com.brief.citronix.dto.TreeDTO;
 import com.brief.citronix.exception.CustomValidationException;
 import com.brief.citronix.mapper.FieldMapper;
 import com.brief.citronix.repository.FarmRepository;
@@ -13,6 +11,7 @@ import com.brief.citronix.repository.FieldRepository;
 import com.brief.citronix.repository.TreeRepository;
 import com.brief.citronix.service.FieldService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -36,13 +35,12 @@ public class FieldServiceImpl implements FieldService {
     }
 
     @Override
-    public Page<FieldDTO> findAll(Pageable pageable) {
-        Page<Field> fields = fieldRepository.findAll(pageable);
-        return fields.map(fieldMapper::toFieldDTO);
+    public Page<Field> findAll(Pageable pageable) {
+        return fieldRepository.findAll(pageable);
     }
 
     @Override
-    public FieldDTO save(FieldCreateDTO fieldCreateDTO) {
+    public Field save(FieldCreateDTO fieldCreateDTO) {
         UUID farmId = fieldCreateDTO.getFarmId();
         Farm farm = farmRepository.findById(farmId)
                 .orElseThrow(() -> new EntityNotFoundException("Farm with ID " + farmId + " not found"));
@@ -75,12 +73,12 @@ public class FieldServiceImpl implements FieldService {
         // Save the field
         Field field = fieldMapper.toField(fieldCreateDTO);
         field.setFarm(farm);
-        Field savedField = fieldRepository.save(field);
-        return fieldMapper.toFieldDTO(savedField);
+        return fieldRepository.save(field);
+
     }
 
     @Override
-    public FieldDTO update(UUID id, FieldCreateDTO fieldCreateDTO) {
+    public Field update(UUID id, FieldCreateDTO fieldCreateDTO) {
         // Check if the field exists
         Field field = fieldRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Field with ID " + id + " not found")
@@ -118,11 +116,11 @@ public class FieldServiceImpl implements FieldService {
         field.setArea(newFieldArea);
         field.setFarm(farm);
 
-        Field updatedField = fieldRepository.save(field);
-        return fieldMapper.toFieldDTO(updatedField);
+        return fieldRepository.save(field);
     }
 
     @Override
+    @Transactional
     public void delete(UUID id) {
         Optional<Field> field = fieldRepository.findById(id);
         if (field.isEmpty()) {
@@ -137,15 +135,19 @@ public class FieldServiceImpl implements FieldService {
     }
 
     @Override
-    public Optional<FieldDTO> findFieldById(UUID id) {
+    public Optional<Field> findFieldById(UUID id) {
         Optional<Field> fieldOptional = fieldRepository.findById(id);
         if (fieldOptional.isEmpty()) {
             throw new EntityNotFoundException("Farm with ID " + id + " not found");
         }
-        return fieldOptional.map(fieldMapper::toFieldDTO);
+        return fieldOptional;
     }
 
 
+    @Override
+    public List<Field> findByFarmId(UUID farmId) {
+        return fieldRepository.findByFarmId(farmId);
+    }
 
 
 }

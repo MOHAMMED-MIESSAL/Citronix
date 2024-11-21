@@ -1,6 +1,6 @@
 package com.brief.citronix.viewmodel;
 
-import com.brief.citronix.dto.FieldDTO;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,7 +15,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TreeVM {
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime datePlantation;
-    private FieldDTO fieldDTO;
+    private int age;
+    private double annualProductivity;
+    private FieldVM field;
+
 }
