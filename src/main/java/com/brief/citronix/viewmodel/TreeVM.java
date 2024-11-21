@@ -8,19 +8,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class FarmVM {
+public class TreeVM {
 
-    private String name;
-    private String location;
-    private double area;
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDateTime creationDate;
+    private LocalDateTime datePlantation;
+    private int age;
+    private double annualProductivity;
+    private FieldVM field;
 
 }

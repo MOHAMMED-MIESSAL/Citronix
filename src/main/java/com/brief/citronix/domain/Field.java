@@ -20,11 +20,11 @@ public class Field {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    private double area;
+    private double area; // in hectares
 
     @ManyToOne
     private Farm farm;
 
-    @OneToMany(mappedBy = "farm")
+    @OneToMany(mappedBy = "field")
     private List<Tree> trees;
 }

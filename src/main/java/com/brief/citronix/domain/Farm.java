@@ -20,7 +20,7 @@ public class Farm {
 
     private String name;
     private String location;
-    private double area;
+    private double area; // in hectares
     private LocalDateTime creationDate;
 
     @OneToMany(mappedBy = "farm")
