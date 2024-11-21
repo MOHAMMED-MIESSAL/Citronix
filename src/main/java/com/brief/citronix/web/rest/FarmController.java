@@ -1,8 +1,8 @@
 package com.brief.citronix.web.rest;
 
 
+import com.brief.citronix.domain.Farm;
 import com.brief.citronix.dto.FarmCreateDTO;
-import com.brief.citronix.dto.FarmDTO;
 import com.brief.citronix.mapper.FarmMapper;
 import com.brief.citronix.service.FarmService;
 import com.brief.citronix.viewmodel.FarmVM;
@@ -39,9 +39,7 @@ public class FarmController {
     public ResponseEntity<Page<FarmVM>> getAllFarms(@RequestParam(defaultValue = "0") int page,
                                                     @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<FarmDTO> farmDTOPage = farmService.findAll(pageable);
-        Page<FarmVM> farmVMPage = farmDTOPage.map(farmMapper::toFarmVM);
-        return ResponseEntity.ok(farmVMPage);
+        return ResponseEntity.ok(farmService.findAll(pageable).map(farmMapper::toFarmVM));
     }
 
 
@@ -50,9 +48,8 @@ public class FarmController {
      */
     @PostMapping
     public ResponseEntity<FarmVM> createFarm(@Valid @RequestBody FarmCreateDTO farmCreateDTO) {
-        FarmDTO farmDTO = farmService.save(farmCreateDTO);
-        FarmVM farmVM = farmMapper.toFarmVM(farmDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(farmVM);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(farmMapper.toFarmVM(farmService.save(farmCreateDTO)));
     }
 
 
@@ -61,8 +58,8 @@ public class FarmController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<FarmVM> getFarmById(@PathVariable UUID id) {
-        Optional<FarmDTO> farmDTO = farmService.findFarmById(id);
-        return farmDTO.map(dto -> ResponseEntity.ok(farmMapper.toFarmVM(dto)))
+        Optional<Farm> farm = farmService.findFarmById(id);
+        return farm.map(value -> ResponseEntity.ok(farmMapper.toFarmVM(value)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
@@ -72,8 +69,7 @@ public class FarmController {
      */
     @PutMapping("/{id}")
     public ResponseEntity<FarmVM> updateFarm(@PathVariable UUID id, @Valid @RequestBody FarmCreateDTO farmCreateDTO) {
-        FarmDTO farmDTO = farmService.update(id, farmCreateDTO);
-        return ResponseEntity.ok(farmMapper.toFarmVM(farmDTO));
+        return ResponseEntity.ok(farmMapper.toFarmVM(farmService.update(id, farmCreateDTO)));
     }
 
     /*
@@ -99,9 +95,8 @@ public class FarmController {
                                                    @RequestParam(defaultValue = "0") int page,
                                                    @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<FarmDTO> farmDTOPage = farmService.searchFarms(name, location, minArea, maxArea, startDate, endDate, pageable);
-        Page<FarmVM> farmVMPage = farmDTOPage.map(farmMapper::toFarmVM);
-        return ResponseEntity.ok(farmVMPage);
+        return ResponseEntity.ok(farmService.searchFarms(name, location, minArea, maxArea, startDate, endDate, pageable)
+                .map(farmMapper::toFarmVM));
     }
 
 

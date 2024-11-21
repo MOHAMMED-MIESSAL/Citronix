@@ -1,8 +1,8 @@
 package com.brief.citronix.web.rest;
 
 
+import com.brief.citronix.domain.Field;
 import com.brief.citronix.dto.FieldCreateDTO;
-import com.brief.citronix.dto.FieldDTO;
 import com.brief.citronix.mapper.FieldMapper;
 import com.brief.citronix.service.FieldService;
 import com.brief.citronix.viewmodel.FieldVM;
@@ -33,25 +33,24 @@ public class FieldController {
     public ResponseEntity<Page<FieldVM>> getAllFields(@RequestParam(defaultValue = "0") int page,
                                                       @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<FieldDTO> fieldDTOPage = fieldService.findAll(pageable);
-        Page<FieldVM> fieldVMPage = fieldDTOPage.map(fieldMapper::toFieldVM);
-        return ResponseEntity.ok(fieldVMPage);
+        return ResponseEntity.ok(fieldService.findAll(pageable).map(fieldMapper::toFieldVM));
 
     }
 
     @PostMapping
     public ResponseEntity<FieldVM> createField(@Valid @RequestBody FieldCreateDTO fieldCreateDTO) {
-        FieldDTO fieldDTO = fieldService.save(fieldCreateDTO);
-        FieldVM fieldVM = fieldMapper.toFieldVM(fieldDTO);
+        Field field = fieldService.save(fieldCreateDTO);
+        FieldVM fieldVM = fieldMapper.toFieldVM(field);
         return ResponseEntity.status(HttpStatus.CREATED).body(fieldVM);
+
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<FieldVM> getFieldById(@PathVariable UUID id) {
-        Optional<FieldDTO> fieldDTO = fieldService.findFieldById(id);
-        return fieldDTO.map(fieldMapper::toFieldVM)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        Optional<Field> field = fieldService.findFieldById(id);
+        FieldVM fieldVM = fieldMapper.toFieldVM(field.get());
+        return ResponseEntity.ok(fieldVM);
+
     }
 
     @DeleteMapping("/{id}")
@@ -62,8 +61,8 @@ public class FieldController {
 
     @PutMapping("/{id}")
     public ResponseEntity<FieldVM> updateField(@PathVariable UUID id, @Valid @RequestBody FieldCreateDTO fieldCreateDTO) {
-        FieldDTO fieldDTO = fieldService.update(id, fieldCreateDTO);
-        FieldVM fieldVM = fieldMapper.toFieldVM(fieldDTO);
+        Field field = fieldService.update(id, fieldCreateDTO);
+        FieldVM fieldVM = fieldMapper.toFieldVM(field);
         return ResponseEntity.ok(fieldVM);
     }
 
