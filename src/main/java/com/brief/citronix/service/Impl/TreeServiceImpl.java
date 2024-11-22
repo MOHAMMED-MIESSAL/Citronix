@@ -3,6 +3,7 @@ package com.brief.citronix.service.Impl;
 import com.brief.citronix.domain.Field;
 import com.brief.citronix.domain.Tree;
 import com.brief.citronix.dto.TreeCreateDTO;
+import com.brief.citronix.exception.CustomValidationException;
 import com.brief.citronix.mapper.TreeMapper;
 import com.brief.citronix.repository.TreeRepository;
 import com.brief.citronix.service.TreeService;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -48,6 +50,9 @@ public class TreeServiceImpl implements TreeService {
             );
         }
 
+        // Check if the planting date is valid
+        validatePlantingDate(treeCreateDTO.getDatePlantation());
+
         Tree tree = treeMapper.toTree(treeCreateDTO);
         tree.setField(field);
         return treeRepository.save(tree);
@@ -61,6 +66,9 @@ public class TreeServiceImpl implements TreeService {
         UUID fieldId = treeCreateDTO.getFieldId();
         Field field = fieldServiceImpl.findFieldById(fieldId)
                 .orElseThrow(() -> new EntityNotFoundException("Field with ID " + fieldId + " not found"));
+
+        // Validate planting date
+        validatePlantingDate(treeCreateDTO.getDatePlantation());
 
         tree.setId(id);
         tree.setField(field);
@@ -97,5 +105,14 @@ public class TreeServiceImpl implements TreeService {
         long currentTreeCount = treeRepository.countByField(field);
         return currentTreeCount < maxTrees;
     }
+    private void validatePlantingDate(LocalDateTime datePlantation) {
+        int month = datePlantation.getMonthValue();
+        if (month < 3 || month > 5) {
+            throw new CustomValidationException(
+                    "Trees can only be planted between March and May "
+            );
+        }
+    }
+
 
 }
