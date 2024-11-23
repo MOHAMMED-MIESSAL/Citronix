@@ -31,7 +31,7 @@ public interface FarmService {
     /**
      * Update a farm by its ID.
      *
-     * @param id the ID of the farm to update
+     * @param id            the ID of the farm to update
      * @param farmCreateDTO the farm creation data transfer object
      * @return the updated Farm object
      */
@@ -55,13 +55,13 @@ public interface FarmService {
     /**
      * Search for farms by name, location, area, and date range.
      *
-     * @param name the name of the farm
-     * @param location the location of the farm
-     * @param minArea the minimum area of the farm
-     * @param maxArea the maximum area of the farm
+     * @param name      the name of the farm
+     * @param location  the location of the farm
+     * @param minArea   the minimum area of the farm
+     * @param maxArea   the maximum area of the farm
      * @param startDate the start date of the farm
-     * @param endDate the end date of the farm
-     * @param pageable pagination information
+     * @param endDate   the end date of the farm
+     * @param pageable  pagination information
      * @return a page of Farm objects
      */
     Page<Farm> searchFarms(String name, String location, Double minArea, Double maxArea, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable);

@@ -7,6 +7,7 @@ import com.brief.citronix.mapper.FieldMapper;
 import com.brief.citronix.service.FieldService;
 import com.brief.citronix.viewmodel.FieldVM;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,16 +20,15 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/fields")
+@RequiredArgsConstructor
 public class FieldController {
 
     private final FieldService fieldService;
     private final FieldMapper fieldMapper;
 
-    public FieldController(FieldService fieldService, FieldMapper fieldMapper) {
-        this.fieldService = fieldService;
-        this.fieldMapper = fieldMapper;
-    }
-
+    /**
+     * Get all fields
+     */
     @GetMapping
     public ResponseEntity<Page<FieldVM>> getAllFields(@RequestParam(defaultValue = "0") int page,
                                                       @RequestParam(defaultValue = "10") int size) {
@@ -37,6 +37,9 @@ public class FieldController {
 
     }
 
+    /**
+     * Create a new field
+     */
     @PostMapping
     public ResponseEntity<FieldVM> createField(@Valid @RequestBody FieldCreateDTO fieldCreateDTO) {
         Field field = fieldService.save(fieldCreateDTO);
@@ -45,6 +48,9 @@ public class FieldController {
 
     }
 
+    /**
+     * Get field by id
+     */
     @GetMapping("/{id}")
     public ResponseEntity<FieldVM> getFieldById(@PathVariable UUID id) {
         Optional<Field> field = fieldService.findFieldById(id);
@@ -53,12 +59,18 @@ public class FieldController {
 
     }
 
+    /**
+     * Delete field
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteField(@PathVariable UUID id) {
         fieldService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Update field
+     */
     @PutMapping("/{id}")
     public ResponseEntity<FieldVM> updateField(@PathVariable UUID id, @Valid @RequestBody FieldCreateDTO fieldCreateDTO) {
         Field field = fieldService.update(id, fieldCreateDTO);

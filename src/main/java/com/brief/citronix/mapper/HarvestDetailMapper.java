@@ -10,6 +10,8 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface HarvestDetailMapper {
 
+    @Mapping(source = "harvestId", target = "harvest.id")
+    @Mapping(source = "treeId", target = "tree.id")
     HarvestDetail toHarvestDetail(HarvestDetailCreateDTO harvestDetailCreateDTO);
 
     @Mapping(source = "quantity", target = "quantity")

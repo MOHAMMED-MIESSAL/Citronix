@@ -7,6 +7,7 @@ import com.brief.citronix.mapper.HarvestDetailMapper;
 import com.brief.citronix.service.HarvestDetailService;
 import com.brief.citronix.viewmodel.HarvestDetailVM;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,16 +20,15 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("api/harvest-details")
+@RequiredArgsConstructor
 public class HarvestDetailController {
 
     private final HarvestDetailService harvestDetailService;
     private final HarvestDetailMapper harvestDetailMapper;
 
-    public HarvestDetailController(HarvestDetailService harvestDetailService, HarvestDetailMapper harvestDetailMapper) {
-        this.harvestDetailService = harvestDetailService;
-        this.harvestDetailMapper = harvestDetailMapper;
-    }
-
+    /**
+     * Get all harvest details
+     */
     @GetMapping
     public ResponseEntity<Page<HarvestDetailVM>> getAllHarvestDetails(@RequestParam(defaultValue = "0") int page,
                                                                       @RequestParam(defaultValue = "10") int size) {
@@ -37,12 +37,18 @@ public class HarvestDetailController {
                 .map(harvestDetailMapper::toHarvestDetailVM));
     }
 
+    /**
+     * Create a new harvest detail
+     */
     @PostMapping
     public ResponseEntity<HarvestDetailVM> createHarvestDetail(@Valid @RequestBody HarvestDetailCreateDTO harvestDetailCreateDTO) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(harvestDetailMapper.toHarvestDetailVM(harvestDetailService.save(harvestDetailCreateDTO)));
     }
 
+    /**
+     * Get a harvest detail by id
+     */
     @GetMapping("/{id}")
     public ResponseEntity<HarvestDetailVM> getHarvestDetailById(@PathVariable UUID id) {
         Optional<HarvestDetail> harvestDetail = harvestDetailService.findHarvestDetailById(id);
@@ -50,11 +56,17 @@ public class HarvestDetailController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    /**
+     * Update a harvest detail
+     */
     @PutMapping("/{id}")
     public ResponseEntity<HarvestDetailVM> updateHarvestDetail(@PathVariable UUID id, @Valid @RequestBody HarvestDetailCreateDTO harvestDetailCreateDTO) {
         return ResponseEntity.ok(harvestDetailMapper.toHarvestDetailVM(harvestDetailService.update(id, harvestDetailCreateDTO)));
     }
 
+    /**
+     * Delete a harvest detail
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteHarvestDetail(@PathVariable UUID id) {
         harvestDetailService.delete(id);
