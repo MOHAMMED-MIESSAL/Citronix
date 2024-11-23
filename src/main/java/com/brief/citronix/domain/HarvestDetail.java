@@ -20,9 +20,9 @@ public class HarvestDetail {
 
     private double quantity;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Harvest harvest;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Tree tree;
 }

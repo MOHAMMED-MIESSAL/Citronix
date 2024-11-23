@@ -10,6 +10,7 @@ import com.brief.citronix.service.HarvestDetailService;
 import com.brief.citronix.service.HarvestService;
 import com.brief.citronix.service.TreeService;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class HarvestDetailServiceImpl implements HarvestDetailService {
 
     private final HarvestDetailRepository harvestDetailRepository;
@@ -25,15 +27,6 @@ public class HarvestDetailServiceImpl implements HarvestDetailService {
     private final TreeService treeService;
     private final HarvestDetailMapper harvestDetailMapper;
 
-    public HarvestDetailServiceImpl(HarvestDetailRepository harvestDetailRepository,
-                                    HarvestService harvestService,
-                                    TreeService treeService,
-                                    HarvestDetailMapper harvestDetailMapper) {
-        this.harvestDetailRepository = harvestDetailRepository;
-        this.harvestService = harvestService;
-        this.treeService = treeService;
-        this.harvestDetailMapper = harvestDetailMapper;
-    }
 
     @Override
     public Page<HarvestDetail> findAll(Pageable pageable) {

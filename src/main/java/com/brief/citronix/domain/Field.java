@@ -22,9 +22,17 @@ public class Field {
 
     private double area; // in hectares
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Farm farm;
 
-    @OneToMany(mappedBy = "field")
+    @OneToMany(mappedBy = "field" , cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Tree> trees;
+
+    @Override
+    public String toString() {
+        return "Field{" +
+                "id=" + id +
+                ", area=" + area +
+                '}';
+    }
 }

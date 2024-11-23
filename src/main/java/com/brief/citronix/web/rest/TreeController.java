@@ -6,6 +6,7 @@ import com.brief.citronix.mapper.TreeMapper;
 import com.brief.citronix.service.TreeService;
 import com.brief.citronix.viewmodel.TreeVM;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,15 +18,11 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/trees")
+@RequiredArgsConstructor
 public class TreeController {
 
     private final TreeService treeService;
     private final TreeMapper treeMapper;
-
-    public TreeController(TreeService treeService, TreeMapper treeMapper) {
-        this.treeService = treeService;
-        this.treeMapper = treeMapper;
-    }
 
     @GetMapping
     public ResponseEntity<Page<TreeVM>> getAllTrees(@RequestParam(defaultValue = "0") int page,

@@ -11,5 +11,4 @@ import java.util.UUID;
 @Repository
 public interface FarmRepository extends JpaRepository<Farm, UUID> {
     Page<Farm> findAll(Pageable pageable);
-
 }

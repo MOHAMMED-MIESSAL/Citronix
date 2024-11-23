@@ -23,7 +23,7 @@ public class Tree {
 
     private LocalDateTime datePlantation;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Field field;
 
     public int getAge() {
@@ -44,5 +44,13 @@ public class Tree {
         } else {
             return 20;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Tree{" +
+                "id=" + id +
+                ", datePlantation=" + datePlantation +
+                '}';
     }
 }
