@@ -3,6 +3,7 @@ package com.brief.citronix.exception;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -59,5 +60,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CustomValidationException.class)
     public ResponseEntity<String> handleCustomValidationException(CustomValidationException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Handler pour l'exception HttpMessageNotReadableException.
+     */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<String> handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {
+        String message = "Invalid input: a numeric value is required, but a string was provided.";
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
     }
 }
