@@ -4,17 +4,20 @@ import com.brief.citronix.domain.Harvest;
 import com.brief.citronix.domain.HarvestDetail;
 import com.brief.citronix.domain.Tree;
 import com.brief.citronix.dto.HarvestDetailCreateDTO;
+import com.brief.citronix.enums.Season;
 import com.brief.citronix.mapper.HarvestDetailMapper;
 import com.brief.citronix.repository.HarvestDetailRepository;
 import com.brief.citronix.service.HarvestDetailService;
 import com.brief.citronix.service.HarvestService;
 import com.brief.citronix.service.TreeService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -95,5 +98,33 @@ public class HarvestDetailServiceImpl implements HarvestDetailService {
         harvestDetailRepository.deleteById(id);
     }
 
+    @Override
+    @Transactional
+    public List<HarvestDetail> saveAll(List<HarvestDetail> harvestDetails) {
+        if (harvestDetails == null || harvestDetails.isEmpty()) {
+            throw new IllegalArgumentException("La liste des détails de récolte est vide ou null.");
+        }
+        return harvestDetailRepository.saveAll(harvestDetails);
+    }
+
+    @Override
+    public boolean existsByFieldAndSeason(UUID fieldId, Season season) {
+        return harvestDetailRepository.existsByFieldAndSeason(fieldId, season);
+    }
+
+    @Override
+    public boolean existsByTreeAndHarvest_Season( Tree tree, Season season) {
+        return harvestDetailRepository.existsByTreeAndHarvest_Season(tree, season);
+    }
+
+    @Override
+    public boolean isTreeInHarvest(Tree tree, Harvest harvest) {
+        return harvestDetailRepository.isTreeInHarvest(tree, harvest);
+    }
+
+    @Override
+    public boolean deleteAllByHarvest(Harvest harvest) {
+        return harvestDetailRepository.deleteAllByHarvest(harvest);
+    }
 
 }

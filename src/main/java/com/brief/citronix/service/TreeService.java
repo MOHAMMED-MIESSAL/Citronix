@@ -15,4 +15,5 @@ public interface TreeService {
     Tree update(UUID id,TreeCreateDTO treeCreateDTO);
     void delete(UUID id);
     Optional<Tree> findTreeById(UUID id);
+    List<Tree> findAllByField(UUID fieldId);
 }

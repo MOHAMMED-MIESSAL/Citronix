@@ -36,42 +36,42 @@ public class HarvestController {
         return ResponseEntity.ok(harvestService.findAll(pageable).map(harvestMapper::toHarvestVM));
     }
 
-    /**
-     * Create a new harvest
-     */
-    @PostMapping
-    public ResponseEntity<HarvestVM> createHarvest(@Valid @RequestBody HarvestCreateDTO harvestCreateDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(harvestMapper.toHarvestVM(harvestService.save(harvestCreateDTO)));
-
-    }
-
-    /**
-     * Get a harvest by id
-     */
-    @GetMapping("/{id}")
-    public ResponseEntity<HarvestVM> getHarvestById(@PathVariable UUID id) {
-        Optional<Harvest> harvest = harvestService.findHarvestById(id);
-        return harvest.map(value -> ResponseEntity.ok(harvestMapper.toHarvestVM(value)))
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    /**
-     * Update a harvest
-     */
-    @PutMapping("/{id}")
-    public ResponseEntity<HarvestVM> updateHarvest(@PathVariable UUID id, @Valid @RequestBody HarvestCreateDTO harvestCreateDTO) {
-        return ResponseEntity.ok(harvestMapper.toHarvestVM(harvestService.update(id, harvestCreateDTO)));
-    }
-
-    /**
-     * Delete a harvest
-     */
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteHarvest(@PathVariable UUID id) {
-        harvestService.delete(id);
-        return ResponseEntity.noContent().build();
-    }
+//    /**
+//     * Create a new harvest
+//     */
+//    @PostMapping
+//    public ResponseEntity<HarvestVM> createHarvest(@Valid @RequestBody HarvestCreateDTO harvestCreateDTO) {
+//        return ResponseEntity.status(HttpStatus.CREATED)
+//                .body(harvestMapper.toHarvestVM(harvestService.save(harvestCreateDTO)));
+//
+//    }
+//
+//    /**
+//     * Get a harvest by id
+//     */
+//    @GetMapping("/{id}")
+//    public ResponseEntity<HarvestVM> getHarvestById(@PathVariable UUID id) {
+//        Optional<Harvest> harvest = harvestService.findHarvestById(id);
+//        return harvest.map(value -> ResponseEntity.ok(harvestMapper.toHarvestVM(value)))
+//                .orElseGet(() -> ResponseEntity.notFound().build());
+//    }
+//
+//    /**
+//     * Update a harvest
+//     */
+//    @PutMapping("/{id}")
+//    public ResponseEntity<HarvestVM> updateHarvest(@PathVariable UUID id, @Valid @RequestBody HarvestCreateDTO harvestCreateDTO) {
+//        return ResponseEntity.ok(harvestMapper.toHarvestVM(harvestService.update(id, harvestCreateDTO)));
+//    }
+//
+//    /**
+//     * Delete a harvest
+//     */
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<Void> deleteHarvest(@PathVariable UUID id) {
+//        harvestService.delete(id);
+//        return ResponseEntity.noContent().build();
+//    }
 
 
 }

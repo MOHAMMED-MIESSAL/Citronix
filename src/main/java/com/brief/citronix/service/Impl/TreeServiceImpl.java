@@ -91,6 +91,10 @@ public class TreeServiceImpl implements TreeService {
         }
     }
 
+    @Override
+    public List<Tree> findAllByField(UUID fieldId) {
+        return treeRepository.findAllByField(fieldId);
+    }
 
     // Helper methods
     public boolean canAddTreeToField(Field field) {

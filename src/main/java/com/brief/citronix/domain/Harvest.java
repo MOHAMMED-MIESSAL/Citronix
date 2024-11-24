@@ -30,5 +30,8 @@ public class Harvest {
     private Season season;
 
     @OneToMany(mappedBy = "harvest", fetch = FetchType.LAZY)
+    private List<HarvestDetail> harvestDetails;
+
+    @OneToMany(mappedBy = "harvest", fetch = FetchType.LAZY)
     private List<Sale> sales;
 }
