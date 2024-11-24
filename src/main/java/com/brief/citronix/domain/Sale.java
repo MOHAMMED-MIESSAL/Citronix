@@ -1,6 +1,6 @@
 package com.brief.citronix.domain;
 
-import com.brief.citronix.enums.Season;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -16,19 +15,23 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Harvest {
+public class Sale {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    private LocalDateTime harvestDate;
+    private LocalDateTime saleDate;
+    private double unitPrice;
 
-    private double totalQuantity;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Harvest harvest;
 
-    @Enumerated(EnumType.STRING)
-    private Season season;
+    private String clientName;
 
-    @OneToMany(mappedBy = "harvest", fetch = FetchType.LAZY)
-    private List<Sale> sales;
+
+    public double calculateTotalPrice() {
+        return unitPrice * harvest.getTotalQuantity();
+    }
+
 }

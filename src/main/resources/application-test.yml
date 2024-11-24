@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/citronix
+    username: citronix
+    password: citronix
+    driver-class-name: org.postgresql.Driver
+
+  liquibase:
+    enabled: false
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+server:
+  port: 8081

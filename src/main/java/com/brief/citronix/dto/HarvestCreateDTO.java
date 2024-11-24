@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -37,4 +38,5 @@ public class HarvestCreateDTO {
     @Enumerated(EnumType.STRING)
     private Season season;
 
+    List<SaleCreateDTO> sales;
 }

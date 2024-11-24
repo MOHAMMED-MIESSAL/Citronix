@@ -7,9 +7,10 @@ import com.brief.citronix.viewmodel.HarvestVM;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring" , uses = {SaleMapper.class})
 public interface HarvestMapper {
 
+    @Mapping(source = "sales", target = "sales")
     Harvest toHarvest(HarvestCreateDTO harvestCreateDTO);
 
     @Mapping(source = "harvestDate", target = "harvestDate")
