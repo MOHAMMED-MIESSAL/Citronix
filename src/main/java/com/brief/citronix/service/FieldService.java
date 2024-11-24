@@ -57,4 +57,12 @@ public interface FieldService {
      * @return a list of FieldDTO objects
      */
     List<Field> findByFarmId(UUID farmId);
+
+    /**
+     * Count the number of fields by farm ID.
+     *
+     * @param farmId the ID of the farm
+     * @return the number of fields
+     */
+    long countByFarmId(UUID farmId);
 }

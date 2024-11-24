@@ -32,6 +32,7 @@ public class FarmCreateDTO {
     private double area;
 
     @PastOrPresent(message = "Creation date cannot be in the future")
+    @NotNull(message = "Creation date cannot be null")
     private LocalDateTime creationDate;
 
     private List<FieldCreateDTO> fields;
