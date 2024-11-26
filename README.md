@@ -77,7 +77,7 @@ The Citronix project involves:
 - **Frameworks**: Spring Boot
 - **Database**: PostgreSQL
 - **Build Tool**: Maven
-- **Testing**: JUnit, Mockito
+- **Testing**: JUnit, Mockito , JaCoCo
 - **Libraries**:
     - **Lombok**: Simplifies entity management.
     - **MapStruct**: Converts between entities and DTOs.
