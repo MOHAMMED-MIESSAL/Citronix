@@ -13,14 +13,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface HarvestDetailService {
+
     Page<HarvestDetail> findAll(Pageable pageable);
     Optional<HarvestDetail> findHarvestDetailById(UUID id);
     HarvestDetail save(HarvestDetailCreateDTO harvestDetailCreateDTO);
     HarvestDetail update(UUID id, HarvestDetailCreateDTO harvestDetailCreateDTO);
     void delete(UUID id);
-    List<HarvestDetail> saveAll(List<HarvestDetail> harvestDetails);
-    boolean existsByFieldAndSeason(UUID fieldId, Season season);
-    boolean existsByTreeAndHarvest_Season(Tree tree, Season season);
-    boolean isTreeInHarvest(Tree tree, Harvest harvest);
-    boolean deleteAllByHarvest(Harvest harvest);
+    boolean existsByTreeAndSeason(UUID treeId, Season season);
+    List<HarvestDetail> saveAllHarvestDetails(List<HarvestDetail> harvestDetails);
+    void deleteAllByHarvestId(UUID harvestId);
 }

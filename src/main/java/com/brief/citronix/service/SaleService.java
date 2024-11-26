@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface SaleService {
+
     Page<Sale> findAll(Pageable pageable);
     Sale save(SaleCreateDTO saleCreateDTO);
     Sale update(UUID id,SaleCreateDTO saleCreateDTO);

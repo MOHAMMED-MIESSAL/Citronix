@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface TreeService {
+
     Page<Tree> findAll(Pageable pageable);
     Tree save(TreeCreateDTO treeCreateDTO);
     Tree update(UUID id,TreeCreateDTO treeCreateDTO);

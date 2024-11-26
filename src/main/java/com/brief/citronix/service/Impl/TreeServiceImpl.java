@@ -82,18 +82,21 @@ public class TreeServiceImpl implements TreeService {
     }
 
     @Override
-    public void delete(UUID id) {
-        Optional<Tree> tree = findTreeById(id);
-        if (tree.isPresent()) {
-            treeRepository.deleteById(id);
-        } else {
-            throw new EntityNotFoundException("Tree with ID " + id + " not found");
-        }
+    public void delete(UUID treeId) {
+        // Récupérer l'arbre par son ID
+        Tree tree = treeRepository.findById(treeId)
+                .orElseThrow(() -> new EntityNotFoundException("Tree not found"));
+
+        // Supprimer l'arbre, Hibernate mettra à NULL les références dans HarvestDetail
+        treeRepository.delete(tree);
     }
+
 
     @Override
     public List<Tree> findAllByField(UUID fieldId) {
-        return treeRepository.findAllByField(fieldId);
+        Field field = fieldService.findFieldById(fieldId)
+                .orElseThrow(() -> new EntityNotFoundException("Field with ID " + fieldId + " not found"));
+        return treeRepository.findAllByField(field);
     }
 
     // Helper methods

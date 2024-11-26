@@ -7,19 +7,15 @@ import com.brief.citronix.viewmodel.FieldVM;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring" , uses = { HarvestDetailMapper.class})
 public interface FieldMapper {
     /**
      * Map FieldCreateDTO to Field
-     * @param fieldCreateDTO
-     * @return
      */
     Field toField(FieldCreateDTO fieldCreateDTO);
 
     /**
      * Map Field to FieldVM
-     * @param field
-     * @return
      */
     @Mapping(source = "farm", target = "farm")
     FieldVM toFieldVM(Field field);

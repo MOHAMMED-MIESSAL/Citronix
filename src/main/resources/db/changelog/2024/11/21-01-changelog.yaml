@@ -74,3 +74,18 @@ databaseChangeLog:
             referencedColumnNames: id
             referencedTableName: tree
 
+  - changeSet:
+      id: 1732198891066-5
+      author: Youcode
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: harvest_detail
+            constraintName: FK_HARVESTDETAIL_ON_TREE
+        - addForeignKeyConstraint:
+            baseTableName: harvest_detail
+            baseColumnNames: tree_id
+            constraintName: FK_HARVESTDETAIL_ON_TREE
+            referencedTableName: tree
+            referencedColumnNames: id
+            onDelete: SET NULL
+

@@ -9,19 +9,28 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface HarvestDetailRepository extends JpaRepository<HarvestDetail, UUID> {
-    List<HarvestDetail> findByHarvestId(UUID harvestId); // Fetch details for a harvest
-    List<HarvestDetail> findByTreeId(UUID treeId); // Fetch details for a tree
-    boolean isTreeInHarvest(Tree tree, Harvest harvest);
-    boolean deleteAllByHarvest(Harvest harvest);
 
-    @Query("SELECT CASE WHEN COUNT(hd) > 0 THEN TRUE ELSE FALSE END " +
-            "FROM HarvestDetail hd WHERE hd.tree.field.id = :fieldId AND hd.harvest.season = :season")
-    boolean existsByFieldAndSeason(@Param("fieldId") UUID fieldId, @Param("season") Season season);
+    @Query("SELECT COUNT(hd) > 0 FROM HarvestDetail hd " +
+            "JOIN hd.harvest h " +
+            "WHERE hd.tree.id = :treeId " +
+            "AND h.season = :season")
+    boolean existsByTreeAndSeason(@Param("treeId") UUID treeId,
+                                  @Param("season") Season season);
 
-    @Query("SELECT CASE WHEN COUNT(hd) > 0 THEN TRUE ELSE FALSE END " +
-            "FROM HarvestDetail hd WHERE hd.tree = :tree AND hd.harvest.season = :season")
-    boolean existsByTreeAndHarvest_Season(@Param("tree") Tree tree, @Param("season") Season season);
+
+    @Query(value = "SELECT EXISTS (" +
+            "    SELECT 1 FROM harvest_detail hd " +
+            "    JOIN harvest h ON hd.harvest_id = h.id " +
+            "    WHERE hd.tree_id = :treeId " +
+            "    AND h.season = :season" +
+            ")", nativeQuery = true)
+    boolean isTreeHarvestedInSeason(@Param("treeId") UUID treeId,
+                                    @Param("season") Season season);
+
+
+    void deleteAllByHarvestId(UUID harvestId);
 }
