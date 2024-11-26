@@ -2,6 +2,7 @@ package com.brief.citronix.service.Impl;
 
 import com.brief.citronix.domain.Harvest;
 import com.brief.citronix.domain.Sale;
+import com.brief.citronix.domain.Tree;
 import com.brief.citronix.dto.SaleCreateDTO;
 import com.brief.citronix.mapper.SaleMapper;
 import com.brief.citronix.repository.SaleRepository;

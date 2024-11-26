@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -79,15 +80,23 @@ public class FarmController {
      * Search  farms
      */
     @GetMapping("/search")
-    public ResponseEntity<Page<FarmVM>> searchFarms(@RequestParam(required = false) String name,
-                                                    @RequestParam(required = false) String location,
-                                                    @RequestParam(required = false) Double minArea,
-                                                    @RequestParam(required = false) Double maxArea,
-                                                    @RequestParam(required = false) LocalDateTime startDate,
-                                                    @RequestParam(required = false) LocalDateTime endDate,
-                                                    @RequestParam(defaultValue = "0") int page,
-                                                    @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public ResponseEntity<Page<FarmVM>> searchFarms(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) Double minArea,
+            @RequestParam(required = false) Double maxArea,
+            @RequestParam(required = false) LocalDateTime startDate,
+            @RequestParam(required = false) LocalDateTime endDate,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "name,asc") String[] sort) {
+
+        // Create sort options
+        Sort sortOptions = Sort.by(
+                Sort.Order.by(sort[0]).with(sort[1].equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC)
+        );
+        Pageable pageable = PageRequest.of(page, size, sortOptions);
+
         return ResponseEntity.ok(farmService.searchFarms(name, location, minArea, maxArea, startDate, endDate, pageable)
                 .map(farmMapper::toFarmVM));
     }

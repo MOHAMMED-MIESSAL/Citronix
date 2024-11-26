@@ -34,4 +34,15 @@ public class Sale {
         return unitPrice * harvest.getTotalQuantity();
     }
 
+    @Override
+    public String toString() {
+        return "Sale{" +
+                "id=" + id +
+                ", saleDate=" + saleDate +
+                ", unitPrice=" + unitPrice +
+                ", harvest=" + harvest +
+                ", clientName='" + clientName + '\'' +
+                '}';
+    }
+
 }

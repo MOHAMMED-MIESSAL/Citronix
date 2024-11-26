@@ -3,6 +3,7 @@ package com.brief.citronix.web.rest;
 
 import com.brief.citronix.domain.Harvest;
 import com.brief.citronix.dto.HarvestCreateDTO;
+import com.brief.citronix.dto.HarvestCreateRequest;
 import com.brief.citronix.mapper.HarvestMapper;
 import com.brief.citronix.service.HarvestService;
 import com.brief.citronix.viewmodel.HarvestVM;
@@ -40,10 +41,11 @@ public class HarvestController {
      * Create a new harvest
      */
     @PostMapping
-    public ResponseEntity<HarvestVM> createHarvest(@Valid @RequestBody HarvestCreateDTO harvestCreateDTO) {
+    public ResponseEntity<HarvestVM> createHarvest(@Valid @RequestBody HarvestCreateRequest harvestCreateRequest) {
+        UUID fieldId = harvestCreateRequest.getFieldId();
+        HarvestCreateDTO harvestCreateDTO = harvestCreateRequest.getHarvestCreateDTO();
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(harvestMapper.toHarvestVM(harvestService.save(harvestCreateDTO)));
-
+                .body(harvestMapper.toHarvestVM(harvestService.save(fieldId, harvestCreateDTO)));
     }
 
     /**
@@ -60,8 +62,10 @@ public class HarvestController {
      * Update a harvest
      */
     @PutMapping("/{id}")
-    public ResponseEntity<HarvestVM> updateHarvest(@PathVariable UUID id, @Valid @RequestBody HarvestCreateDTO harvestCreateDTO) {
-        return ResponseEntity.ok(harvestMapper.toHarvestVM(harvestService.update(id, harvestCreateDTO)));
+    public ResponseEntity<HarvestVM> updateHarvest(@PathVariable UUID id, @Valid @RequestBody HarvestCreateRequest harvestCreateRequest) {
+        UUID fieldId = harvestCreateRequest.getFieldId();
+        HarvestCreateDTO harvestCreateDTO = harvestCreateRequest.getHarvestCreateDTO();
+        return ResponseEntity.ok(harvestMapper.toHarvestVM(harvestService.update(fieldId, id, harvestCreateDTO)));
     }
 
     /**
@@ -72,6 +76,5 @@ public class HarvestController {
         harvestService.delete(id);
         return ResponseEntity.noContent().build();
     }
-
 
 }

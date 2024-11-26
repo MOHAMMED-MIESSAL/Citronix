@@ -29,6 +29,19 @@ public class Harvest {
     @Enumerated(EnumType.STRING)
     private Season season;
 
+    @OneToMany(mappedBy = "harvest" , fetch = FetchType.LAZY)
+    private List<HarvestDetail> harvestDetails;
+
     @OneToMany(mappedBy = "harvest", fetch = FetchType.LAZY)
     private List<Sale> sales;
+
+    @Override
+    public String toString() {
+        return "Harvest{" +
+                "id=" + id +
+                ", harvestDate=" + harvestDate +
+                ", totalQuantity=" + totalQuantity +
+                ", season=" + season +
+                '}';
+    }
 }

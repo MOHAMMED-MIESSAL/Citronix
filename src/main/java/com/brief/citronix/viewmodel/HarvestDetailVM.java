@@ -14,5 +14,4 @@ public class HarvestDetailVM {
 
     private double quantity;
     private HarvestVM harvest;
-    private TreeVM tree;
 }
