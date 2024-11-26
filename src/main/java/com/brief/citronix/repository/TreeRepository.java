@@ -9,4 +9,5 @@ import java.util.UUID;
 
 public interface TreeRepository extends JpaRepository<Tree, UUID> {
     long countByField(Field field);
+    List<Tree> findAllByField(Field field);
 }

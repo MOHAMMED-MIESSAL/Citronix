@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -29,12 +30,11 @@ public class HarvestCreateDTO {
     @NotNull(message = "Harvest date is required")
     private LocalDateTime harvestDate;
 
-    @NotNull(message = "Total quantity is required")
-    @Positive(message = "Total quantity must be greater than zero")
     private double totalQuantity;
 
     @NotNull(message = "Season is required")
     @Enumerated(EnumType.STRING)
     private Season season;
 
+    List<SaleCreateDTO> sales;
 }

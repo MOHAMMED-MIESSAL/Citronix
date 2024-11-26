@@ -7,15 +7,24 @@ import com.brief.citronix.viewmodel.HarvestDetailVM;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface HarvestDetailMapper {
+
+    /**
+     * Map HarvestDetailCreateDTO to HarvestDetail
+     */
 
     @Mapping(source = "harvestId", target = "harvest.id")
     @Mapping(source = "treeId", target = "tree.id")
     HarvestDetail toHarvestDetail(HarvestDetailCreateDTO harvestDetailCreateDTO);
 
+    /**
+     * Map HarvestDetail to HarvestDetailVM
+     */
     @Mapping(source = "quantity", target = "quantity")
     @Mapping(source = "harvest", target = "harvest")
-    @Mapping(source = "tree", target = "tree")
     HarvestDetailVM toHarvestDetailVM(HarvestDetail harvestDetail);
+
 }

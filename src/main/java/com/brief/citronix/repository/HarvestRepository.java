@@ -8,5 +8,5 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface HarvestRepository extends JpaRepository<Harvest, UUID> {
-    Optional<Harvest> findBySeason(Season season);
+//    Optional<Harvest> findBySeason(Season season);
 }

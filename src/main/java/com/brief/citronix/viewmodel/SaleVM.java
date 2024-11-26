@@ -6,12 +6,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class HarvestDetailVM {
+public class SaleVM {
 
-    private double quantity;
+    private LocalDateTime saleDate;
+    private double unitPrice;
+    private String clientName;
+    private double revenue;
+
     private HarvestVM harvest;
+
 }

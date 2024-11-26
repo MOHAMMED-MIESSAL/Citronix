@@ -11,10 +11,10 @@ import java.util.UUID;
 
 
 public interface HarvestService {
+
     Page<Harvest> findAll(Pageable pageable);
     Optional<Harvest> findHarvestById(UUID id);
-    Harvest save(HarvestCreateDTO harvestCreateDTO);
-    Harvest update(UUID id, HarvestCreateDTO harvestCreateDTO);
+    Harvest save(UUID fieldId,HarvestCreateDTO harvestCreateDTO);
+    Harvest update(UUID fieldId, UUID harvestId, HarvestCreateDTO harvestCreateDTO);
     void delete(UUID id);
-
 }

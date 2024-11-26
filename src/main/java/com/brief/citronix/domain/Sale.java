@@ -1,12 +1,13 @@
 package com.brief.citronix.domain;
+
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -14,27 +15,34 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class HarvestDetail {
+public class Sale {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    private double quantity;
+    private LocalDateTime saleDate;
+    private double unitPrice;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Harvest harvest;
 
-    @ManyToOne(fetch = FetchType.LAZY )
-    private Tree tree;
+    private String clientName;
+
+
+    public double calculateTotalPrice() {
+        return unitPrice * harvest.getTotalQuantity();
+    }
 
     @Override
     public String toString() {
-        return "HarvestDetail{" +
+        return "Sale{" +
                 "id=" + id +
-                ", quantity=" + quantity +
+                ", saleDate=" + saleDate +
+                ", unitPrice=" + unitPrice +
                 ", harvest=" + harvest +
-                ", tree=" + tree +
+                ", clientName='" + clientName + '\'' +
                 '}';
     }
+
 }
